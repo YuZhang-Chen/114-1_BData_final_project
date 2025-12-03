@@ -21,7 +21,7 @@ plt.rcParams['axes.unicode_minus'] = False # 讓負號正常顯示
 
 # 1. 讀取資料
 # 請確保 CSV 檔案路徑正確
-df = pd.read_csv('cleaned_customer_data.csv')
+df = pd.read_csv('customer_data_cleaned.csv')
 
 # ==========================================
 # (a) 找出所有群組 (Stayed, Churned, Joined) 的重要特徵

@@ -19,7 +19,7 @@ else:
 plt.rcParams['axes.unicode_minus'] = False
 
 # 1. 讀取資料
-df = pd.read_csv('cleaned_customer_data.csv')
+df = pd.read_csv('customer_data_cleaned.csv')
 
 # 2. 資料前處理
 # 設定目標欄位：合約類型 (Month-to-Month, One Year, Two Year)
