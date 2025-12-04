@@ -48,11 +48,10 @@ for col in cols_to_zero:
 # (E) 檢查並修正費用欄位負值
 print("\n--- 費用欄位負值檢查與修正 ---")
 
-# 定義所有應為非負數的費用欄位
-fee_columns = {
+# 步驟 1: 先處理基礎費用欄位 (不包含總收入)
+base_fee_columns = {
     '總費用': '累積總支出',
     '每月費用': '目前每月費用',
-    '總收入': '公司總收入',
     '額外數據費用': '額外數據收費',
     '額外長途費用': '額外長途收費',
     '總退款': '退款總額'
@@ -60,7 +59,8 @@ fee_columns = {
 
 total_corrections = 0
 
-for col, description in fee_columns.items():
+print("【步驟 1】修正基礎費用欄位負值:")
+for col, description in base_fee_columns.items():
     if col in df.columns:
         negative_mask = df[col] < 0
         negative_count = negative_mask.sum()
@@ -75,12 +75,72 @@ for col, description in fee_columns.items():
             # 修正為 0
             df.loc[negative_mask, col] = 0
             total_corrections += negative_count
-            print(f"    已將 {negative_count} 筆負值修正為 0")
+            print(f"   ✓ 已將 {negative_count} 筆負值修正為 0")
         else:
-            print(f" '{col}': 無負值")
+            print(f"✓ '{col}': 無負值")
 
 if total_corrections > 0:
-    print(f"\n總計修正 {total_corrections} 筆費用負值")
+    print(f"\n總計修正 {total_corrections} 筆基礎費用負值")
+
+# 步驟 2: 重新計算總收入
+print("\n【步驟 2】重新計算總收入:")
+if all(col in df.columns for col in ['總費用', '總退款', '額外數據費用', '額外長途費用']):
+    # 儲存原始總收入以便比較
+    original_revenue = df['總收入'].copy() if '總收入' in df.columns else None
+    
+    # 重新計算
+    df['總收入'] = (
+        df['總費用'] 
+        - df['總退款'] 
+        + df['額外數據費用'] 
+        + df['額外長途費用']
+    )
+    
+    # 確保總收入非負 (理論上應該已經非負,但以防萬一)
+    negative_revenue = (df['總收入'] < 0).sum()
+    if negative_revenue > 0:
+        print(f"⚠️ 重新計算後仍有 {negative_revenue} 筆總收入為負值")
+        print(f"   將其修正為 0")
+        df.loc[df['總收入'] < 0, '總收入'] = 0
+    
+    # 比較修正前後的差異
+    if original_revenue is not None:
+        changed_count = (df['總收入'] != original_revenue).sum()
+        print(f"✓ 總收入已重新計算")
+        print(f"   修正筆數: {changed_count}")
+        if changed_count > 0:
+            max_diff = abs(df['總收入'] - original_revenue).max()
+            print(f"   最大差異: {max_diff:.2f}")
+    else:
+        print(f"✓ 總收入已計算完成")
+else:
+    print("⚠️ 缺少計算總收入所需的欄位,跳過重新計算")
+
+# 步驟 3: 最終驗證所有費用欄位
+print("\n【步驟 3】最終驗證所有費用欄位:")
+all_fee_columns = {
+    '總費用': '累積總支出',
+    '每月費用': '目前每月費用',
+    '總收入': '公司總收入',
+    '額外數據費用': '額外數據收費',
+    '額外長途費用': '額外長途收費',
+    '總退款': '退款總額'
+}
+
+all_valid = True
+for col, description in all_fee_columns.items():
+    if col in df.columns:
+        negative_count = (df[col] < 0).sum()
+        if negative_count > 0:
+            print(f"❌ '{col}': 仍有 {negative_count} 筆負值!")
+            all_valid = False
+        else:
+            print(f"✓ '{col}': 通過驗證 (無負值)")
+
+if all_valid:
+    print("\n所有費用欄位驗證通過!")
+else:
+    print("\n部分費用欄位仍有負值,需進一步檢查!")
 
 # (F) 檢查年齡範圍
 if '年齡' in df.columns:
