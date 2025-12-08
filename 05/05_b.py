@@ -51,7 +51,7 @@ try:
     east_rules = find_association_rules(df, '東部')
     if east_rules is not None and not east_rules.empty:
         # 儲存結果
-        output_path_east = "05/east_customer_rules.csv"
+        output_path_east = "06/east_customer_rules.csv"
         east_rules.to_csv(output_path_east, index=False, encoding='utf-8-sig')
         print(f"東部顧客的關聯規則已儲存至: {output_path_east}")
         print("東部顧客關聯規則前五筆：")
