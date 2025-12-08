@@ -84,7 +84,7 @@ east_cluster = max(cluster_longitudes, key=cluster_longitudes.get)
 west_cluster = min(cluster_longitudes, key=cluster_longitudes.get)
 
 # 建立群集名稱映射
-cluster_names = {east_cluster: '東部顧客', west_cluster: '西部顧客'}
+cluster_names = {east_cluster: '東部', west_cluster: '西部'}
 df['區域'] = df['Cluster'].map(cluster_names)
 
 print(f"✓ 分群完成")
@@ -99,8 +99,8 @@ print(f"\n【步驟 5】群集地理分布視覺化")
 plt.figure(figsize=(12, 8))
 
 # 使用不同顏色標示東西部
-colors = {'西部顧客': '#FF6B6B', '東部顧客': '#4ECDC4'}
-for region in ['西部顧客', '東部顧客']:
+colors = {'西部': '#FF6B6B', '東部': '#4ECDC4'}
+for region in ['西部', '東部']:
     mask = df['區域'] == region
     plt.scatter(df.loc[mask, '經度'], df.loc[mask, '緯度'], 
                c=colors[region], label=region, marker='o', alpha=0.6, s=50)
