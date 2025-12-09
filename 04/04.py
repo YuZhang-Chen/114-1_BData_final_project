@@ -24,9 +24,9 @@ plt.rcParams['axes.unicode_minus'] = False
 # ==========================================
 # 請確保 csv 檔案在同一個目錄下
 try:
-    df = pd.read_csv('customer_data_cleaned.csv')
+    df = pd.read_csv('cleaned_customer_data.csv')
 except FileNotFoundError:
-    print("錯誤：找不到 'customer_data_cleaned.csv'，請確認檔案位置。")
+    print("錯誤：找不到 'cleaned_customer_data.csv'，請確認檔案位置。")
     # 這裡為了不讓程式報錯崩潰，建立一個假資料示範 (若你有檔案會直接讀取上面的 csv)
     import numpy as np
     df = pd.DataFrame({
