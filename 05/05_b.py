@@ -38,8 +38,8 @@ def find_association_rules(df, region_name):
     if rules.empty:
         return None
         
-    # 根據提升度和支持度排序
-    rules = rules.sort_values(['lift', 'confidence'], ascending=[False, False])
+    # 根據提升度和信賴度排序
+    rules = rules.sort_values(['confidence', 'lift'], ascending=[False, False])
     
     return rules
 
