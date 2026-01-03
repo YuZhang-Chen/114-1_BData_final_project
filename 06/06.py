@@ -79,7 +79,7 @@ for age_group in age_groups:
             rules = rules[rules['lift'] > min_lift]
             
             # 按照 confidence 排序
-            rules = rules.sort_values(['confidence', 'support', 'lift'], ascending=False)
+            rules = rules.sort_values(['confidence', 'lift', 'support'], ascending=False)
             
             # 儲存規則
             all_rules[age_group] = rules
