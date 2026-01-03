@@ -52,7 +52,7 @@ print("步驟 3: 對各年齡群組進行關聯規則分析...")
 
 age_groups = ['青', '中', '老']
 all_rules = {}
-min_support = 0.2
+min_support = 0.35
 min_confidence = 0.7
 min_lift = 1.2
 
@@ -79,7 +79,7 @@ for age_group in age_groups:
             rules = rules[rules['lift'] > min_lift]
             
             # 按照 confidence 排序
-            rules = rules.sort_values('confidence', ascending=False)
+            rules = rules.sort_values(['confidence', 'support', 'lift'], ascending=False)
             
             # 儲存規則
             all_rules[age_group] = rules
